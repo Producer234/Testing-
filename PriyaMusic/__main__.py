@@ -21,7 +21,7 @@ from pytgcalls.exceptions import NoActiveGroupCall
 import config
 from config import BANNED_USERS
 from PriyaMusic import LOGGER, app, userbot
-from PriyaMusic.core.call import Alexa
+from PriyaMusic.core.call import Priya
 from PriyaMusic.misc import sudo
 from PriyaMusic.plugins import ALL_MODULES
 from PriyaMusic.utils.database import get_banned_users, get_gbanned
