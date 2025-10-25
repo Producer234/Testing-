@@ -9,17 +9,15 @@ This program is licensed software: you may use and modify it for personal,
 non-commercial purposes. Collaboration and improvements are welcome
 with proper credit to the original creator.
 """
+
+import asyncio
 from PriyaMusic import app
-from pyrogram import filters
+from pyrogram import Client, filters
+from datetime import datetime, timedelta
+from pyrogram.errors import FloodWait
+from PriyaMusic.core.mongo import db as alexa
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from PriyaMusic.utils.database import get_served_users, get_served_chats
 
 
-@app.on_message(filters.command("id"))
-def ids(_, message):
-    if reply := message.reply_to_message:
-        message.reply_text(
-            f"**ʏᴏᴜʀ ɪᴅ**: `{message.from_user.id}`\n**{reply.from_user.first_name}'s ɪᴅ**: `{reply.from_user.id}`\n**ᴄʜᴀᴛ ɪᴅ**: `{message.chat.id}`"
-        )
-    else:
-        message.reply(
-            f"**ʏᴏᴜʀ ɪᴅ**: `{message.from_user.id}`\n**ᴄʜᴀᴛ ɪᴅ**: `{message.chat.id}`"
-        )
+OWNER_ID = 7753899951
