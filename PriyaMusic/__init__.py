@@ -13,7 +13,7 @@ with proper credit to the original creator.
 import asyncio
 import sys
 
-from PriyaMusic.core.bot import AlexaBot
+from PriyaMusic.core.bot import PriyaBot
 from PriyaMusic.core.dir import dirr
 from PriyaMusic.core.git import git
 from PriyaMusic.core.userbot import Userbot
