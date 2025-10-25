@@ -25,12 +25,16 @@ from .logging import LOGGER
 if sys.platform != "win32":
     try:
         import uvloop
-
         asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
         LOGGER(__name__).info("Using Uvloop Event Loop for Enhanced Performance")
     except ImportError:
         LOGGER(__name__).warning("Uvloop not found, using default event loop.")
 
+# ✅ Ensure event loop exists before starting bots
+try:
+    asyncio.get_running_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
 
 # Directories
 dirr()
