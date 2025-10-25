@@ -25,7 +25,7 @@ from config import (
     adminlist,
 )
 from PriyaMusic import YouTube, app
-from PriyaMusic.core.call import Alexa
+from PriyaMusic.core.call import Priya 
 from PriyaMusic.misc import SUDOERS, db
 from PriyaMusic.utils.database import (
     is_active_chat,
