@@ -1,0 +1,43 @@
+# Copyright (C) 2025 by PR-all-bots @ Github, < https://github.com/PR-All-Bots >
+# All rights reserved. © PriyaMusic.
+
+"""
+PriyaMusic is a private Telegram bot project developed for personal use.
+Copyright (c) 2025 ~ Present PR-all-bots <https://github.com/PR-All-Bots>
+
+This program is licensed software: you may use and modify it for personal,
+non-commercial purposes. Collaboration and improvements are welcome
+with proper credit to the original creator.
+"""
+
+
+from typing import Dict, List, Union
+
+from PriyaMusic.core.mongo import mongodb
+
+gbansdb = db.gban
+
+
+async def get_gbans_count() -> int:
+    users = gbansdb.find({"user_id": {"$gt": 0}})
+    users = await users.to_list(length=100000)
+    return len(users)
+
+
+async def is_gbanned_user(user_id: int) -> bool:
+    user = await gbansdb.find_one({"user_id": user_id})
+    return bool(user)
+
+
+async def add_gban_user(user_id: int):
+    is_gbanned = await is_gbanned_user(user_id)
+    if is_gbanned:
+        return
+    return await gbansdb.insert_one({"user_id": user_id})
+
+
+async def remove_gban_user(user_id: int):
+    is_gbanned = await is_gbanned_user(user_id)
+    if not is_gbanned:
+        return
+    return await gbansdb.delete_one({"user_id": user_id})
