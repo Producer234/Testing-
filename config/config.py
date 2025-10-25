@@ -42,7 +42,7 @@ BOT_ID = getenv("BOT_ID")
 
 HEROKU_APP_NAME = getenv("HEROKU_APP_NAME")
 
-UPSTREAM_REPO = getenv("UPSTREAM_REPO", "https://github.com/Producer234/Testing-")
+UPSTREAM_REPO = getenv("UPSTREAM_REPO", "https://github.com/TheTeamAlexa/AlexaMusic")
 
 UPSTREAM_BRANCH = getenv("UPSTREAM_BRANCH", "master")
 
@@ -198,11 +198,6 @@ if UPSTREAM_REPO and not re.match("(?:http|https)://", UPSTREAM_REPO):
         "[ERROR] - Your UPSTREAM_REPO url is wrong. Please ensure that it starts with https://"
     )
     sys.exit()
-
-if GITHUB_REPO and not re.match("(?:http|https)://", GITHUB_REPO):
-    print(
-        "[ERROR] - Your GITHUB_REPO url is wrong. Please ensure that it starts with https://"
-    )
 
 
 if (
