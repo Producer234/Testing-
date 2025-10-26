@@ -35,7 +35,7 @@ from PriyaMusic.utils.database import (
     remove_active_video_chat,
 )
 from PriyaMusic.utils.decorators.language import language
-from PriyaMusic.utils.pastebin import Alexabin
+from PriyaMusic.utils.pastebin import Priyabin
 
 # Commands
 GETLOG_COMMAND = get_command("GETLOG_COMMAND")
