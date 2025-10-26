@@ -29,7 +29,7 @@ from PriyaMusic.utils.inline.playlist import (
     get_playlist_markup,
     warning_markup,
 )
-from PriyaMusic.utils.pastebin import Alexabin
+from PriyaMusic.utils.pastebin import Priyabin
 from PriyaMusic.utils.stream.stream import stream
 from config import BANNED_USERS, SERVER_PLAYLIST_LIMIT
 from strings import get_command
@@ -57,7 +57,7 @@ async def check_playlist(client, message: Message, _):
         count += 1
         msg += f"\n\n{count}- {title[:70]}\n"
         msg += _["playlist_5"].format(duration)
-    link = await Alexabin(msg)
+    link = await Priyabin(msg)
     lines = msg.count("\n")
     car = os.linesep.join(msg.split(os.linesep)[:17]) if lines >= 17 else msg
     carbon = await Carbon.generate(car, randint(100, 10000000000))
