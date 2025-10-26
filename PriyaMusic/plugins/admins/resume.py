@@ -17,7 +17,7 @@ from pyrogram.types import Message
 from config import BANNED_USERS
 from strings import get_command
 from PriyaMusic import app
-from PriyaMusic.core.call import Alexa
+from PriyaMusic.core.call import Priya 
 from PriyaMusic.utils.database import is_music_playing, music_on
 from PriyaMusic.utils.decorators import AdminRightsCheck
 

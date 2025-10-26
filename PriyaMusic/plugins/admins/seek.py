@@ -17,7 +17,7 @@ from pyrogram.types import Message
 from config import BANNED_USERS
 from strings import get_command
 from PriyaMusic import YouTube, app
-from PriyaMusic.core.call import Alexa
+from PriyaMusic.core.call import Priya
 from PriyaMusic.misc import db
 from PriyaMusic.utils import AdminRightsCheck, seconds_to_min
 
