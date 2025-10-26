@@ -30,7 +30,7 @@ from PriyaMusic.utils.database import (
 from PriyaMusic.utils.exceptions import AssistantErr
 from PriyaMusic.utils.inline.play import stream_markup, queue_markup, telegram_markup
 from PriyaMusic.utils.inline.playlist import close_markup
-from PriyaMusic.utils.pastebin import Priyabin
+from PriyaMusic.utils.pastebin import pastebin
 from PriyaMusic.utils.stream.queue import put_queue, put_queue_index
 from PriyaMusic.utils.thumbnails import gen_thumb, gen_qthumb
 
