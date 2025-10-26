@@ -19,7 +19,7 @@ from pyrogram.types import Message
 from config import BANNED_USERS, MUSIC_BOT_NAME, PING_IMG_URL
 from strings import get_command
 from PriyaMusic import app
-from PriyaMusic.core.call import Alexa
+from PriyaMusic.core.call import Priya 
 from PriyaMusic.utils import bot_sys_stats
 from PriyaMusic.utils.decorators.language import language
 

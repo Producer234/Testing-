@@ -19,7 +19,7 @@ from pyrogram.types import CallbackQuery, Message
 from config import BANNED_USERS, MUSIC_BOT_NAME, adminlist, lyrical
 from strings import get_command
 from PriyaMusic import app
-from PriyaMusic.core.call import Alexa
+from PriyaMusic.core.call import Priya 
 from PriyaMusic.misc import db
 from PriyaMusic.utils.database import get_authuser_names, get_cmode
 from PriyaMusic.utils.decorators import ActualAdminCB, AdminActual, language
@@ -60,7 +60,7 @@ async def restartbot(client, message: Message, _):
     await asyncio.sleep(1)
     try:
         db[message.chat.id] = []
-        await Alexa.stop_stream(message.chat.id)
+        await Priy.stop_stream(message.chat.id)
     except Exception:
         pass
     chat_id = await get_cmode(message.chat.id)

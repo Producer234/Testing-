@@ -24,7 +24,7 @@ from config import BANNED_USERS
 from strings import get_command
 from PriyaMusic import app
 from PriyaMusic.misc import db
-from PriyaMusic.utils import Alexabin, get_channeplayCB, seconds_to_min
+from PriyaMusic.utils import Priyabin, get_channeplayCB, seconds_to_min
 from PriyaMusic.utils.database import get_cmode, is_active_chat, is_music_playing
 from PriyaMusic.utils.decorators.language import language, languageCB
 from PriyaMusic.utils.inline import queue_back_markup, queue_markup
@@ -192,7 +192,7 @@ async def queued_tracks(client, CallbackQuery: CallbackQuery, _):
             return await CallbackQuery.edit_message_text(msg, reply_markup=buttons)
         if "📌" in msg:
             msg = msg.replace("📌", "")
-        link = await Alexabin(msg)
+        link = await Priyabin(msg)
         med = InputMediaPhoto(media=link, caption=_["queue_3"].format(link))
         await CallbackQuery.edit_message_media(media=med, reply_markup=buttons)
     else:
