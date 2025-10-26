@@ -17,7 +17,7 @@ import config
 from config import BANNED_USERS
 from strings import get_command
 from PriyaMusic import app
-from PriyaMusic.core.call import Alexa
+from PriyaMusic.core.call import Priya
 from PriyaMusic.utils.decorators.play import PlayWrapper
 from PriyaMusic.utils.logger import play_logs
 from PriyaMusic.utils.stream.stream import stream
