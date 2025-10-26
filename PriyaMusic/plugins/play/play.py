@@ -19,7 +19,7 @@ from pytgcalls.exceptions import NoActiveGroupCall
 
 import config
 from PriyaMusic import Apple, Resso, SoundCloud, Spotify, Telegram, YouTube, app
-from PriyaMusic.core.call import Alexa
+from PriyaMusic.core.call import Priya
 from PriyaMusic.utils import seconds_to_min, time_to_seconds
 from PriyaMusic.utils.channelplay import get_channeplayCB
 from PriyaMusic.utils.database import is_video_allowed
