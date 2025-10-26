@@ -16,7 +16,7 @@ from pyrogram.enums import ChatType
 
 import config
 from PriyaMusic import app
-from PriyaMusic.core.call import Alexa, autoend
+from PriyaMusic.core.call import Priya, autoend
 from PriyaMusic.utils.database import (
     get_client,
     is_active_chat,
