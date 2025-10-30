@@ -14,7 +14,7 @@ import sys
 from pyrogram import Client, filters
 from pyrogram.enums import ChatMemberStatus
 import config
-from logging import LOGGER
+from PriyaMusic import logging
 from spotify_api import get_track
 
 class PriyaBot(Client):
