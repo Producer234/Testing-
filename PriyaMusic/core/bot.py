@@ -7,15 +7,16 @@ Copyright (c) 2025 ~ Present PR-all-bots <https://github.com/PR-All-Bots>
 
 This program is licensed software: you may use and modify it for personal,
 non-commercial purposes. Collaboration and improvements are welcome
-with proper credit to the original creator."""
-
+with proper credit to the original creator.
+"""
 
 import sys
 from pyrogram import Client, filters
 from pyrogram.enums import ChatMemberStatus
 import config
 from custom_logger import LOGGER
-from spotify_api import get_track
+from spotify_api import get_track  # your Spotify API integration
+
 
 class PriyaBot(Client):
     def __init__(self):
@@ -30,10 +31,12 @@ class PriyaBot(Client):
 
     async def start(self):
         await super().start()
+
         get_me = await self.get_me()
         self.username = get_me.username
         self.id = get_me.id
         self.mention = get_me.mention
+
         try:
             await self.send_message(config.LOG_GROUP_ID, "» Bot started! Waiting for commands...")
         except Exception:
@@ -41,14 +44,13 @@ class PriyaBot(Client):
                 "Bot failed to access log Group. Add bot to log channel and promote as admin."
             )
             sys.exit()
-        a = await self.get_chat_member(config.LOG_GROUP_ID, self.id)
-        if a.status != ChatMemberStatus.ADMINISTRATOR:
+
+        member = await self.get_chat_member(config.LOG_GROUP_ID, self.id)
+        if member.status != ChatMemberStatus.ADMINISTRATOR:
             LOGGER(__name__).error("Promote Bot as Admin in Logger Group")
             sys.exit()
-        if get_me.last_name:
-            self.name = f"{get_me.first_name} {get_me.last_name}"
-        else:
-            self.name = get_me.first_name
+
+        self.name = f"{get_me.first_name} {get_me.last_name}" if get_me.last_name else get_me.first_name
         LOGGER(__name__).info(f"Bot Started as {self.name}")
 
     async def search_spotify(self, track_name):
@@ -57,15 +59,20 @@ class PriyaBot(Client):
             return f"🎵 Track: {track['name']}\n👤 Artist: {track['artist']}\n🔗 Link: {track['url']}"
         return "No track found."
 
+
+# Initialize bot instance (do not call run() here)
 bot = PriyaBot()
 
+
+# Spotify command handler
 @bot.on_message(filters.command("spotify") & filters.private)
 async def spotify_command(client, message):
     query = " ".join(message.command[1:])
     if not query:
-        await message.reply_text("Please provide a song name.\nUsage: /spotify Shape of You")
+        await message.reply_text(
+            "Please provide a song name.\nUsage: /spotify Shape of You"
+        )
         return
+
     result = await client.search_spotify(query)
     await message.reply_text(result)
-
-bot.run()
