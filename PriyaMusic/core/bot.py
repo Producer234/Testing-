@@ -11,12 +11,11 @@ with proper credit to the original creator."""
 
 
 import sys
-
-from pyrogram import Client
-import config
-from ..logging import LOGGER
+from pyrogram import Client, filters
 from pyrogram.enums import ChatMemberStatus
-
+import config
+from logging import LOGGER
+from spotify_api import get_track
 
 class PriyaBot(Client):
     def __init__(self):
@@ -36,20 +35,37 @@ class PriyaBot(Client):
         self.id = get_me.id
         self.mention = get_me.mention
         try:
-            await self.send_message(
-                config.LOG_GROUP_ID, "» ᴍᴜsɪᴄ ʙᴏᴛ sᴛᴀʀᴛᴇᴅ, ᴡᴀɪᴛɪɴɢ ғᴏʀ ᴀssɪsᴛᴀɴᴛ..."
-            )
+            await self.send_message(config.LOG_GROUP_ID, "» Bot started! Waiting for commands...")
         except Exception:
             LOGGER(__name__).error(
-                "Bot has failed to access the log Group. Make sure that you have added your bot to your log channel and promoted as admin!"
+                "Bot failed to access log Group. Add bot to log channel and promote as admin."
             )
             sys.exit()
         a = await self.get_chat_member(config.LOG_GROUP_ID, self.id)
         if a.status != ChatMemberStatus.ADMINISTRATOR:
-            LOGGER(__name__).error("Please promote Bot as Admin in Logger Group")
+            LOGGER(__name__).error("Promote Bot as Admin in Logger Group")
             sys.exit()
         if get_me.last_name:
             self.name = f"{get_me.first_name} {get_me.last_name}"
         else:
             self.name = get_me.first_name
-        LOGGER(__name__).info(f"MusicBot Started as {self.name}")
+        LOGGER(__name__).info(f"Bot Started as {self.name}")
+
+    async def search_spotify(self, track_name):
+        track = get_track(track_name)
+        if track:
+            return f"🎵 Track: {track['name']}\n👤 Artist: {track['artist']}\n🔗 Link: {track['url']}"
+        return "No track found."
+
+bot = PriyaBot()
+
+@bot.on_message(filters.command("spotify") & filters.private)
+async def spotify_command(client, message):
+    query = " ".join(message.command[1:])
+    if not query:
+        await message.reply_text("Please provide a song name.\nUsage: /spotify Shape of You")
+        return
+    result = await client.search_spotify(query)
+    await message.reply_text(result)
+
+bot.run()
