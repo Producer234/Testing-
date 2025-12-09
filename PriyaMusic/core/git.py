@@ -1,28 +1,20 @@
-# Copyright (C) 2025 by PR-all-bots @ Github, < https://github.com/PR-All-Bots >
-# All rights reserved. © PriyaMusic.
-
-"""
-PriyaMusic is a private Telegram bot project developed for personal use.
-Copyright (c) 2025 ~ Present PR-all-bots <https://github.com/PR-All-Bots>
-
-This program is licensed software: you may use and modify it for personal,
-non-commercial purposes. Collaboration and improvements are welcome
-with proper credit to the original creator.
-"""
-
 import asyncio
-import os
 import shlex
+import shutil
 from typing import Tuple
 
-from git import Repo
-from git.exc import GitCommandError, InvalidGitRepositoryError, GitCommandNotFound
+try:
+    from git import Repo
+    from git.exc import GitCommandError, InvalidGitRepositoryError
+except ImportError:
+    Repo = None
 
 import config
 from ..logging import LOGGER
 
 
 def install_req(cmd: str) -> Tuple[str, str, int, int]:
+    """Install requirements asynchronously."""
     async def install_requirements():
         args = shlex.split(cmd)
         process = await asyncio.create_subprocess_exec(
@@ -42,21 +34,13 @@ def install_req(cmd: str) -> Tuple[str, str, int, int]:
 
 
 def git():
-    """
-    Initializes or updates the Git repository if possible.
-    If running on Heroku or if Git is missing, safely skip without crashing.
-    """
+    """Safely initialize and update repo if Git is available."""
+    # Skip entirely if Git or GitPython is not available
+    if not shutil.which("git") or Repo is None:
+        LOGGER(__name__).info("Git not found, skipping upstream updates.")
+        return
+
     REPO_LINK = config.UPSTREAM_REPO
-
-    # Skip Git logic completely if running on Heroku or without Git
-    if os.getenv("HEROKU", "true") == "true":
-        LOGGER(__name__).info("Heroku environment detected. Skipping Git setup.")
-        return
-
-    if not REPO_LINK:
-        LOGGER(__name__).warning("No UPSTREAM_REPO defined in config. Skipping Git setup.")
-        return
-
     if config.GIT_TOKEN:
         GIT_USERNAME = REPO_LINK.split("com/")[1].split("/")[0]
         TEMP_REPO = REPO_LINK.split("https://")[1]
@@ -67,40 +51,23 @@ def git():
     try:
         repo = Repo()
         LOGGER(__name__).info("Git Client Found [VPS DEPLOYER]")
-    except (InvalidGitRepositoryError, GitCommandError):
+    except GitCommandError:
+        LOGGER(__name__).info("Invalid Git Command")
+    except InvalidGitRepositoryError:
+        # Initialize repo safely
         try:
             repo = Repo.init()
-            if "origin" in repo.remotes:
-                origin = repo.remote("origin")
-            else:
-                origin = repo.create_remote("origin", UPSTREAM_REPO)
-
+            origin = repo.remotes.origin if "origin" in repo.remotes else repo.create_remote("origin", UPSTREAM_REPO)
             origin.fetch()
-            repo.create_head(
-                config.UPSTREAM_BRANCH,
-                origin.refs[config.UPSTREAM_BRANCH],
-            )
-            repo.heads[config.UPSTREAM_BRANCH].set_tracking_branch(
-                origin.refs[config.UPSTREAM_BRANCH]
-            )
+            repo.create_head(config.UPSTREAM_BRANCH, origin.refs[config.UPSTREAM_BRANCH])
+            repo.heads[config.UPSTREAM_BRANCH].set_tracking_branch(origin.refs[config.UPSTREAM_BRANCH])
             repo.heads[config.UPSTREAM_BRANCH].checkout(True)
-
             try:
-                repo.create_remote("origin", config.UPSTREAM_REPO)
-            except BaseException:
-                pass
-
-            nrs = repo.remote("origin")
-            nrs.fetch(config.UPSTREAM_BRANCH)
-            try:
-                nrs.pull(config.UPSTREAM_BRANCH)
+                origin.fetch(config.UPSTREAM_BRANCH)
+                origin.pull(config.UPSTREAM_BRANCH)
             except GitCommandError:
                 repo.git.reset("--hard", "FETCH_HEAD")
-
             install_req("pip3 install --no-cache-dir -r requirements.txt")
-            LOGGER(__name__).info(f"Fetched Updates from: {REPO_LINK}")
-
-        except GitCommandNotFound:
-            LOGGER(__name__).warning("Git binary not found in system. Skipping repository setup.")
+            LOGGER(__name__).info("Fetching updates from upstream repository...")
         except Exception as e:
-            LOGGER(__name__).error(f"Git setup failed: {e}")
+            LOGGER(__name__).warning(f"Failed to update repository: {e}")
