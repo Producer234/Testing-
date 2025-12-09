@@ -15,7 +15,6 @@ import sys
 
 from PriyaMusic.core.bot import PriyaBot
 from PriyaMusic.core.dir import dirr
-from PriyaMusic.core.git import git
 from PriyaMusic.core.userbot import Userbot
 from PriyaMusic.misc import dbb, heroku
 
@@ -38,9 +37,6 @@ except RuntimeError:
 
 # Directories
 dirr()
-
-# Check Git Updates
-git()
 
 # Initialize Memory DB
 dbb()
