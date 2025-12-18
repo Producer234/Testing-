@@ -34,7 +34,7 @@ LOG_GROUP_ID = int(getenv("LOG_GROUP_ID", "-1002751155801"))
 
 MUSIC_BOT_NAME = getenv("PRIYA MUSIC ")
 
-OWNER_ID = int(getenv("OWNER_ID", None))
+OWNER_ID = [int(x) for x in config("OWNER_ID", default="7753899951").split()]
 
 HEROKU_API_KEY = getenv("HEROKU_API_KEY")
 
