@@ -1,4 +1,5 @@
 from typing import Union
+import os
 
 from pyrogram.types import InlineKeyboardButton
 
@@ -63,11 +64,39 @@ def private_panel(_, BOT_USERNAME, OWNER: Union[bool, int] = None):
             )
         ]
     )
-    # Fixed: Use OWNER_ID from config if available, otherwise use passed OWNER parameter
-    if CHANNEL and OWNER_ID:
+    
+    # Get owner ID from various sources
+    owner_id_to_use = None
+    
+    # First priority: Use the OWNER parameter passed to function
+    if OWNER:
+        owner_id_to_use = OWNER
+    
+    # Second priority: Try environment variable (Heroku)
+    if owner_id_to_use is None:
+        env_owner_id = os.environ.get("OWNER_ID")
+        if env_owner_id:
+            try:
+                owner_id_to_use = int(env_owner_id.strip())
+            except (ValueError, AttributeError):
+                pass
+    
+    # Third priority: Try config.OWNER_ID
+    if owner_id_to_use is None and OWNER_ID is not None:
+        if isinstance(OWNER_ID, list) and len(OWNER_ID) > 0:
+            owner_id_to_use = OWNER_ID[0]
+        elif isinstance(OWNER_ID, int):
+            owner_id_to_use = OWNER_ID
+        else:
+            try:
+                owner_id_to_use = int(OWNER_ID)
+            except (ValueError, TypeError):
+                owner_id_to_use = None
+    
+    if CHANNEL and owner_id_to_use:
         buttons.append(
             [
-                InlineKeyboardButton(text=_["S_B_7"], user_id=OWNER_ID[0]),  # Fixed: Use first owner ID
+                InlineKeyboardButton(text=_["S_B_7"], user_id=owner_id_to_use),
                 InlineKeyboardButton(text=_["S_B_6"], url=f"{CHANNEL}"),
             ]
         )
@@ -78,16 +107,15 @@ def private_panel(_, BOT_USERNAME, OWNER: Union[bool, int] = None):
                     InlineKeyboardButton(text=_["S_B_6"], url=f"{CHANNEL}"),
                 ]
             )
-        if OWNER:
+        if owner_id_to_use:
             buttons.append(
                 [
-                    InlineKeyboardButton(text=_["S_B_7"], user_id=OWNER),  # Use the passed OWNER parameter
+                    InlineKeyboardButton(text=_["S_B_7"], user_id=owner_id_to_use),
                 ]
             )
     return buttons
 
 
-# These functions should also be included for stats functionality
 def help_pannel(_):
     buttons = [
         [
