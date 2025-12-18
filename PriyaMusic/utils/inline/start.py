@@ -1,16 +1,3 @@
-# Copyright (C) 2025 by PR-all-bots @ Github, < https://github.com/PR-All-Bots >
-# All rights reserved. © PriyaMusic.
-
-"""
-PriyaMusic is a private Telegram bot project developed for personal use.
-Copyright (c) 2025 ~ Present PR-all-bots <https://github.com/PR-All-Bots>
-
-This program is licensed software: you may use and modify it for personal,
-non-commercial purposes. Collaboration and improvements are welcome
-with proper credit to the original creator.
-"""
-
-
 from typing import Union
 
 from pyrogram.types import InlineKeyboardButton
@@ -76,10 +63,11 @@ def private_panel(_, BOT_USERNAME, OWNER: Union[bool, int] = None):
             )
         ]
     )
+    # Fixed: Use OWNER_ID from config if available, otherwise use passed OWNER parameter
     if CHANNEL and OWNER_ID:
         buttons.append(
             [
-                InlineKeyboardButton(text=_["S_B_7"], user_id=OWNER_ID),
+                InlineKeyboardButton(text=_["S_B_7"], user_id=OWNER_ID[0]),  # Fixed: Use first owner ID
                 InlineKeyboardButton(text=_["S_B_6"], url=f"{CHANNEL}"),
             ]
         )
@@ -93,7 +81,21 @@ def private_panel(_, BOT_USERNAME, OWNER: Union[bool, int] = None):
         if OWNER:
             buttons.append(
                 [
-                    InlineKeyboardButton(text=_["S_B_7"], user_id=OWNER_ID),
+                    InlineKeyboardButton(text=_["S_B_7"], user_id=OWNER),  # Use the passed OWNER parameter
                 ]
             )
+    return buttons
+
+
+# These functions should also be included for stats functionality
+def help_pannel(_):
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text=_["S_B_1"],
+                url=f"https://t.me/{app.username}?start=help",
+            ),
+            InlineKeyboardButton(text=_["S_B_2"], callback_data="settings_helper"),
+        ],
+    ]
     return buttons
