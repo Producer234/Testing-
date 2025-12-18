@@ -1,19 +1,6 @@
-# Copyright (C) 2025 by PR-all-bots @ Github, < https://github.com/PR-All-Bots >
-# All rights reserved. © PriyaMusic.
-
-"""
-PriyaMusic is a private Telegram bot project developed for personal use.
-Copyright (c) 2025 ~ Present PR-all-bots <https://github.com/PR-All-Bots>
-
-This program is licensed software: you may use and modify it for personal,
-non-commercial purposes. Collaboration and improvements are welcome
-with proper credit to the original creator.
-"""
-
 import asyncio
 
-from pyrogram import filters
-from pyrogram import enums, filters
+from pyrogram import filters, enums
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from youtubesearchpython.__future__ import VideosSearch
 
@@ -40,13 +27,10 @@ from PriyaMusic.utils.decorators.language import LanguageStart
 from PriyaMusic.utils.inline import help_pannel, private_panel, start_pannel
 from PriyaMusic.utils.command import commandpro
 
-
 loop = asyncio.get_running_loop()
 
 
-@app.on_message(
-    filters.command(get_command("START_COMMAND")) & filters.private & ~BANNED_USERS
-)
+@app.on_message(filters.command(get_command("START_COMMAND")) & filters.private & ~BANNED_USERS)
 @LanguageStart
 async def start_comm(client, message: Message, _):
     await add_served_user(message.from_user.id)
@@ -59,7 +43,7 @@ async def start_comm(client, message: Message, _):
             return await message.reply_text(_["song_2"])
         if name[:3] == "sta":
             m = await message.reply_text(
-                "🥱 ɢᴇᴛᴛɪɴɢ ʏᴏᴜʀ ᴩᴇʀsᴏɴᴀʟ sᴛᴀᴛs ғʀᴏᴍ {config.MUSIC_BOT_NAME} sᴇʀᴠᴇʀ."
+                f"🥱 ɢᴇᴛᴛɪɴɢ ʏᴏᴜʀ ᴩᴇʀsᴏɴᴀʟ sᴛᴀᴛs ғʀᴏᴍ {config.MUSIC_BOT_NAME} sᴇʀᴠᴇʀ."
             )
             stats = await get_userss(message.from_user.id)
             tot = len(stats)
@@ -74,13 +58,9 @@ async def start_comm(client, message: Message, _):
                 for i in stats:
                     top_list = stats[i]["spot"]
                     results[str(i)] = top_list
-                    list_arranged = dict(
-                        sorted(
-                            results.items(),
-                            key=lambda item: item[1],
-                            reverse=True,
-                        )
-                    )
+                list_arranged = dict(
+                    sorted(results.items(), key=lambda item: item[1], reverse=True)
+                )
                 if not results:
                     return m.edit(_["ustats_1"])
                 tota = 0
@@ -95,7 +75,7 @@ async def start_comm(client, message: Message, _):
                     details = stats.get(vidid)
                     title = (details["title"][:35]).title()
                     if vidid == "telegram":
-                        msg += f"🔗[ᴛᴇʟᴇɢʀᴀᴍ ᴍᴇᴅɪᴀ](https://t.me/pr_all_bots) ** ᴩʟᴀʏᴇᴅ {count} ᴛɪᴍᴇs**\n\n"
+                        msg += f"🔗[ᴛᴇʟᴇɢʀᴀᴍ ᴍᴇᴅɪᴀ](https://t.me/pr_all_bot_support) ** ᴩʟᴀʏᴇᴅ {count} ᴛɪᴍᴇs**\n\n"
                     else:
                         msg += f"🔗 [{title}](https://www.youtube.com/watch?v={vidid}) ** played {count} times**\n\n"
                 msg = _["ustats_2"].format(tot, tota, limit) + msg
@@ -128,9 +108,9 @@ async def start_comm(client, message: Message, _):
                 return await Telegram.send_split_text(message, lyrics)
             else:
                 return await message.reply_text("ғᴀɪʟᴇᴅ ᴛᴏ ɢᴇᴛ ʟʏʀɪᴄs.")
-        if name[0:3] == "del":
+        if name[:3] == "del":
             await del_plist_msg(client=client, message=message, _=_)
-        if name[0:3] == "inf":
+        if name[:3] == "inf":
             m = await message.reply_text("🔎")
             query = (str(name)).replace("info_", "", 1)
             query = f"https://www.youtube.com/watch?v={query}"
@@ -160,7 +140,7 @@ async def start_comm(client, message: Message, _):
             key = InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton(text="• ʏᴏᴜᴛᴜʙᴇ •", url=f"{link}"),
+                        InlineKeyboardButton(text="• ʏᴏᴜᴛᴜʙᴇ •", url=link),
                         InlineKeyboardButton(text="• ᴄʟᴏsᴇ •", callback_data="close"),
                     ],
                 ]
@@ -182,73 +162,39 @@ async def start_comm(client, message: Message, _):
                 )
     else:
         try:
-            # ANIMATION PART START
-            welcome_msg = await message.reply_text("𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐁𝐚𝐛𝐲 {} ❤️".format(message.from_user.mention))
+            # ✅ ANIMATION START
+            welcome_msg = await message.reply_text(f"𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐁𝐚𝐛𝐲 {message.from_user.mention} ❤️")
             await asyncio.sleep(0.4)
-            
-            await welcome_msg.edit_text("𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐁𝐚𝐛𝐲 {} ✨".format(message.from_user.mention))
+            await welcome_msg.edit_text(f"𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐁𝐚𝐛𝐲 {message.from_user.mention} ✨")
             await asyncio.sleep(0.4)
-            
-            await welcome_msg.edit_text("𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐁𝐚𝐛𝐲 {} 🌟".format(message.from_user.mention))
+            await welcome_msg.edit_text(f"𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐁𝐚𝐛𝐲 {message.from_user.mention} 🌟")
             await asyncio.sleep(0.4)
-            
-            await welcome_msg.edit_text("𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐁𝐚𝐛𝐲 {} 💫".format(message.from_user.mention))
+            await welcome_msg.edit_text(f"𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐁𝐚𝐛𝐲 {message.from_user.mention} 💫")
             await asyncio.sleep(0.4)
-            
-            await welcome_msg.edit_text("𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐁𝐚𝐛𝐲 {} 🎉".format(message.from_user.mention))
+            await welcome_msg.edit_text(f"𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐁𝐚𝐛𝐲 {message.from_user.mention} 🎉")
             await asyncio.sleep(0.4)
-            
-            await welcome_msg.edit_text("𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐁𝐚𝐛𝐲 {} 🥰".format(message.from_user.mention))
+            await welcome_msg.edit_text(f"𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐁𝐚𝐛𝐲 {message.from_user.mention} 🥰")
             await asyncio.sleep(0.6)
-            
             await welcome_msg.delete()
-            
-            # Starting animation
+
             start_msg = await message.reply_text("**⚡️ѕ**")
             await asyncio.sleep(0.3)
-            
-            await start_msg.edit_text("**⚡ѕт**")
-            await asyncio.sleep(0.3)
-            
-            await start_msg.edit_text("**⚡ѕтα**")
-            await asyncio.sleep(0.3)
-            
-            await start_msg.edit_text("**⚡ѕтαя**")
-            await asyncio.sleep(0.3)
-            
-            await start_msg.edit_text("**⚡ѕтαят**")
-            await asyncio.sleep(0.3)
-            
-            await start_msg.edit_text("**⚡ѕтαятι**")
-            await asyncio.sleep(0.3)
-            
-            await start_msg.edit_text("**⚡ѕтαятιи**")
-            await asyncio.sleep(0.3)
-            
-            await start_msg.edit_text("**⚡ѕтαятιиg**")
-            await asyncio.sleep(0.3)
-            
-            await start_msg.edit_text("**⚡ѕтαятιиg.**")
-            await asyncio.sleep(0.3)
-            
-            await start_msg.edit_text("**⚡ѕтαятιиg..**")
-            await asyncio.sleep(0.4)
-            
-            await start_msg.edit_text("**⚡ѕтαятιиg...**")
-            await asyncio.sleep(0.8)
-            
+            for txt in ["**⚡ѕт**", "**⚡ѕтα**", "**⚡ѕтαя**", "**⚡ѕтαят**", "**⚡ѕтαятι**",
+                        "**⚡ѕтαятιи**", "**⚡ѕтαятιиg**", "**⚡ѕтαятιиg.**", "**⚡ѕтαятιиg..**", "**⚡ѕтαятιиg...**"]:
+                await start_msg.edit_text(txt)
+                await asyncio.sleep(0.3 if "..." not in txt else 0.8)
             await start_msg.delete()
-            
-            # Send sticker
-            sticker_msg = await message.reply_sticker("CAACAgQAAxkBAAEP-dJpOX-tsu6tP3zAd9LKxKaaEg5KMwACzA0AArEo8FAq4giMEFweoDYE")
+
+            sticker_msg = await message.reply_sticker("CAACAgUAAxkBAAEPj4Vo676_xVsQBZOGoE_g4ttX29VVhQACOBsAApMnWFfxTe6MJ9ju9jYE")
             await asyncio.sleep(3.0)
             await sticker_msg.delete()
-            # ANIMATION PART END
+            # ✅ ANIMATION END
 
             await app.resolve_peer(OWNER_ID[0])
             OWNER = OWNER_ID[0]
         except Exception:
             OWNER = None
+
         out = private_panel(_, app.username, OWNER)
         if config.START_IMG_URL:
             try:
@@ -276,9 +222,7 @@ async def start_comm(client, message: Message, _):
             )
 
 
-@app.on_message(
-    filters.command(get_command("START_COMMAND")) & filters.group & ~BANNED_USERS
-)
+@app.on_message(filters.command(get_command("START_COMMAND")) & filters.group & ~BANNED_USERS)
 @LanguageStart
 async def testbot(client, message: Message, _):
     out = start_pannel(_)
@@ -313,19 +257,13 @@ async def welcome(client, message: Message):
                     return await app.leave_chat(message.chat.id)
                 if chat_id in await blacklisted_chats():
                     await message.reply_text(
-                        _["start_7"].format(
-                            f"https://t.me/{app.username}?start=sudolist"
-                        )
+                        _["start_7"].format(f"https://t.me/{app.username}?start=sudolist")
                     )
                     return await app.leave_chat(chat_id)
                 userbot = await get_assistant(message.chat.id)
                 out = start_pannel(_)
                 await message.reply_text(
-                    _["start_3"].format(
-                        config.MUSIC_BOT_NAME,
-                        userbot.username,
-                        userbot.id,
-                    ),
+                    _["start_3"].format(config.MUSIC_BOT_NAME, userbot.username, userbot.id),
                     reply_markup=InlineKeyboardMarkup(out),
                 )
             if member.id in config.OWNER_ID:
@@ -336,7 +274,6 @@ async def welcome(client, message: Message):
                 return await message.reply_text(
                     _["start_5"].format(config.MUSIC_BOT_NAME, member.mention)
                 )
-            return
         except:
             return
 
@@ -346,9 +283,7 @@ async def alive(client, message: Message):
     await message.reply_photo(
         photo="https://telegra.ph/file/125f531d44a9999290cac.jpg",
         caption=f"""━━━━━━━━━━━━━━━━━━━━━━━━\n\n✪ ʜᴇʟʟᴏ, ᴘʀɪʏᴀ ɪs ᴡᴏʀᴋɪɴɢ ᴀɴᴅ ғᴜɴᴄᴛɪᴏɴɪɴɢ ᴘʀᴏᴘᴇʀʟʏ\n✪ ᴛʜᴀɴᴋs ᴛᴏ PR ᴛᴇᴀᴍ 🌼 ..\n\n┏━━━━━━━━━━━━━━━━━┓\n┣★ ᴏᴡɴᴇʀ    : PR](https://t.me/owner_of_pr)\n┣★ ᴜᴘᴅᴀᴛᴇs › : [ᴘʀɪʏᴀ ʜᴇʟᴘ](https://t.me/pr_all_bot_support)┓\n┗━━━━━━━━━━━━━━━━━┛\n\n💞 ɪғ ʏᴏᴜ ʜᴀᴠᴇ ᴀɴʏ ǫᴜᴇsᴛɪᴏɴs ᴛʜᴇɴ\nᴅᴍ ᴛᴏ ᴍʏ [ᴏᴡɴᴇʀ](https://t.me/owner_of_pr) ᴍᴀᴋᴇ sᴜʀᴇ ᴛᴏ sᴛᴀʀ ᴏᴜʀ ᴘʀᴏᴊᴇᴄᴛ ...\n\n━━━━━━━━━━━━━━━━━━━━━━━━""",
-        reply_markup=InlineKeyboardMarkup(
-            [[InlineKeyboardButton("🌼 ᴘʀɪʏᴀ ᴄʜᴀᴛ 💮", url=config.SUPPORT_GROUP)]]
-        ),
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🌼 ᴘʀɪʏᴀ ᴄʜᴀᴛ 💮", url=config.SUPPORT_GROUP)]]),
     )
 
 
@@ -362,8 +297,11 @@ async def verify(client, message: Message):
     await add_served_user(message.from_user.id)
     await message.reply_photo(
         photo="https://res.cloudinary.com/dqs0i4x9y/image/upload/v1761233955/xpohzvi8ptl9fiha6dmm.jpg",
-        caption=f"""━━━━━━━━━━━━━━━━━━━━━━━━\n\n✪ **ᴄᴏɴɢʀᴀᴛᴜʟᴀᴛɪᴏɴ** 🎉\n✪ ɴᴏᴡ ʏᴏᴜ ᴀʀᴇ ᴘʀɪʏᴀ ᴠᴇʀɪғɪᴇᴅ ᴍᴇᴍʙᴇʀ ɢᴏ ʙᴀᴄᴋ ᴀɴᴅ ᴇɴᴊᴏʏ ᴏᴜʀ sᴇʀᴠɪᴄᴇ ᴀɴᴅ ᴘʟᴀʏ ᴍᴜsɪᴄ 🌼 ..\n\n━━━━━━━━━━━━━━━━━━━━━━━━""",
+        caption=f"""━━━━━━━━━━━━━━━━━━━━━━━━
+✪ **ᴄᴏɴɢʀᴀᴛᴜʟᴀᴛɪᴏɴ** 🎉
+✪ ɴᴏᴡ ʏᴏᴜ ᴀʀᴇ ᴘʀɪʏᴀ ᴠᴇʀɪғɪᴇᴅ ᴍᴇᴍʙᴇʀ ɢᴏ ʙᴀᴄᴋ ᴀɴᴅ ᴇɴᴊᴏʏ ᴏᴜʀ sᴇʀᴠɪᴄᴇ ᴀɴᴅ ᴘʟᴀʏ ᴍᴜsɪᴄ 🌼 ..
+━━━━━━━━━━━━━━━━━━━━━━━━""",
         reply_markup=InlineKeyboardMarkup(
             [[InlineKeyboardButton("🌼 ᴘʀɪʏᴀ ᴄʜᴀᴛ 💮", url=config.SUPPORT_GROUP)]]
         ),
-                )
+    )
