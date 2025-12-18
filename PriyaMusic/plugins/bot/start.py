@@ -25,7 +25,7 @@ from PriyaMusic.utils.database import (
     is_served_private_chat,
 )
 from PriyaMusic.utils.decorators.language import LanguageStart
-from PriyaMusic.utils.inline import help_pannel, private_panel, start_panel
+from PriyaMusic.utils.inline import help_pannel, private_panel, start_pannel
 from PriyaMusic.utils.command import commandpro
 
 
@@ -233,10 +233,10 @@ async def start_comm(client, message: Message, _):
             await sticker_msg.delete()
             # ANIMATION PART END
 
-            out = private_panel(_, app.username, None)  # Removed problematic user button
+            out = private_panel(_, app.username, OWNER_ID[0] if OWNER_ID else None)
         except Exception as e:
             print(f"Error in start animation: {e}")
-            out = private_panel(_, app.username, None)  # Removed problematic user button
+            out = private_panel(_, app.username, OWNER_ID[0] if OWNER_ID else None)
         
         if config.START_IMG_URL:
             try:
@@ -248,12 +248,12 @@ async def start_comm(client, message: Message, _):
             except Exception as e:
                 print(f"Error sending photo: {e}")
                 await message.reply_text(
-                    text=_["start_2"].format(message.from_user.mention, app.mention),  # Changed from caption to text
+                    text=_["start_2"].format(message.from_user.mention, app.mention),
                     reply_markup=InlineKeyboardMarkup(out),
                 )
         else:
             await message.reply_text(
-                text=_["start_2"].format(message.from_user.mention, app.mention),  # Changed from caption to text
+                text=_["start_2"].format(message.from_user.mention, app.mention),
                 reply_markup=InlineKeyboardMarkup(out),
             )
         if await is_on_off(config.LOG):
@@ -270,7 +270,7 @@ async def start_comm(client, message: Message, _):
 )
 @LanguageStart
 async def testbot(client, message: Message, _):
-    out = start_panel(_)
+    out = start_pannel(_)
     return await message.reply_text(
         _["start_1"].format(message.chat.title, config.MUSIC_BOT_NAME),
         reply_markup=InlineKeyboardMarkup(out),
@@ -308,7 +308,7 @@ async def welcome(client, message: Message):
                     )
                     return await app.leave_chat(chat_id)
                 userbot = await get_assistant(message.chat.id)
-                out = start_panel(_)
+                out = start_pannel(_)
                 await message.reply_text(
                     _["start_3"].format(
                         config.MUSIC_BOT_NAME,
