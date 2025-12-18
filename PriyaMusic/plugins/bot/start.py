@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 from pyrogram import filters
 from pyrogram import enums, filters
@@ -47,7 +48,7 @@ async def start_comm(client, message: Message, _):
             return await message.reply_text(_["song_2"])
         if name[:3] == "sta":
             m = await message.reply_text(
-                "🥱 ɢᴇᴛᴛɪɴɢ ʏᴏᴜʀ ᴩᴇʀsᴏɴᴀʟ sᴛᴀᴛs ғʀᴏᴍ {config.MUSIC_BOT_NAME} sᴇʀᴠᴇʀ."
+                f"🥱 ɢᴇᴛᴛɪɴɢ ʏᴏᴜʀ ᴩᴇʀsᴏɴᴀʟ sᴛᴀᴛs ғʀᴏᴍ {config.MUSIC_BOT_NAME} sᴇʀᴠᴇʀ."
             )
             stats = await get_userss(message.from_user.id)
             tot = len(stats)
@@ -233,10 +234,54 @@ async def start_comm(client, message: Message, _):
             await sticker_msg.delete()
             # ANIMATION PART END
 
-            out = private_panel(_, app.username, OWNER_ID[0] if OWNER_ID else None)
+            # Get owner ID from environment variable or config
+            owner_id = None
+            # First try to get from environment variable (Heroku)
+            env_owner_id = os.environ.get("OWNER_ID")
+            if env_owner_id:
+                try:
+                    # Try to convert to integer
+                    owner_id = int(env_owner_id.strip())
+                except (ValueError, AttributeError):
+                    pass
+            
+            # If not from env, try from config
+            if owner_id is None:
+                if OWNER_ID is not None:
+                    if isinstance(OWNER_ID, list) and len(OWNER_ID) > 0:
+                        owner_id = OWNER_ID[0]
+                    elif isinstance(OWNER_ID, int):
+                        owner_id = OWNER_ID
+                    else:
+                        try:
+                            owner_id = int(OWNER_ID)
+                        except (ValueError, TypeError):
+                            owner_id = None
+                
+            out = private_panel(_, app.username, owner_id)
         except Exception as e:
             print(f"Error in start animation: {e}")
-            out = private_panel(_, app.username, OWNER_ID[0] if OWNER_ID else None)
+            # Get owner ID again in exception handler
+            owner_id = None
+            env_owner_id = os.environ.get("OWNER_ID")
+            if env_owner_id:
+                try:
+                    owner_id = int(env_owner_id.strip())
+                except (ValueError, AttributeError):
+                    pass
+            
+            if owner_id is None and OWNER_ID is not None:
+                if isinstance(OWNER_ID, list) and len(OWNER_ID) > 0:
+                    owner_id = OWNER_ID[0]
+                elif isinstance(OWNER_ID, int):
+                    owner_id = OWNER_ID
+                else:
+                    try:
+                        owner_id = int(OWNER_ID)
+                    except (ValueError, TypeError):
+                        owner_id = None
+                        
+            out = private_panel(_, app.username, owner_id)
         
         if config.START_IMG_URL:
             try:
@@ -334,7 +379,7 @@ async def welcome(client, message: Message):
 async def alive(client, message: Message):
     await message.reply_photo(
         photo="https://telegra.ph/file/125f531d44a9999290cac.jpg",
-        caption=f"""━━━━━━━━━━━━━━━━━━━━━━━━\n\n✪ ʜᴇʟʟᴏ, ᴘʀɪʏᴀ ɪs ᴡᴏʀᴋɪɴɢ ᴀɴᴅ ғᴜɴᴄᴛɪᴏɴɪɴɢ ᴘʀᴏᴘᴇʀʟʏ\n✪ ᴛʜᴀɴᴋs ᴛᴏ PR ᴛᴇᴀᴍ 🌼 ..\n\n┏━━━━━━━━━━━━━━━━━┓\n┣★ ᴏᴡɴᴇʀ    : PR](https://t.me/owner_of_pr)\n┣★ ᴜᴘᴅᴀᴛᴇs › : [ᴘʀɪʏᴀ ʜᴇʟᴘ](https://t.me/pr_all_bot_support)┓\n┗━━━━━━━━━━━━━━━━━┛\n\n💞 ɪғ ʏᴏᴜ ʜᴀᴠᴇ ᴀɴʏ ǫᴜᴇsᴛɪᴏɴs ᴛʜᴇɴ\nᴅᴍ ᴛᴏ ᴍʏ [ᴏᴡɴᴇʀ](https://t.me/owner_of_pr) ᴍᴀᴋᴇ sᴜʀᴇ ᴛᴏ sᴛᴀʀ ᴏᴜʀ ᴘʀᴏᴊᴇᴄᴛ ...\n\n━━━━━━━━━━━━━━━━━━━━━━━━""",
+        caption=f"""━━━━━━━━━━━━━━━━━━━━━━━━\n\n✪ ʜᴇʟʟᴏ, ᴘʀɪʏᴀ ɪs ᴡᴏʀᴋɪɴɢ ᴀɴᴅ ғᴜɴᴄᴛɪᴏɴɪɴɢ ᴘʀᴏᴘᴇʀʟʏ\n✪ ᴛʜᴀɴᴋs ᴛᴏ PR ᴛᴇᴀᴍ 🌼 ..\n\n┏━━━━━━━━━━━━━━━━━┓\n┣★ ᴏᴡɴᴇʀ    : [PR](https://t.me/owner_of_pr)\n┣★ ᴜᴘᴅᴀᴛᴇs › : [ᴘʀɪʏᴀ ʜᴇʟᴘ](https://t.me/pr_all_bot_support)\n┗━━━━━━━━━━━━━━━━━┛\n\n💞 ɪғ ʏᴏᴜ ʜᴀᴠᴇ ᴀɴʏ ǫᴜᴇsᴛɪᴏɴs ᴛʜᴇɴ\nᴅᴍ ᴛᴏ ᴍʏ [ᴏᴡɴᴇʀ](https://t.me/owner_of_pr) ᴍᴀᴋᴇ sᴜʀᴇ ᴛᴏ sᴛᴀʀ ᴏᴜʀ ᴘʀᴏᴊᴇᴄᴛ ...\n\n━━━━━━━━━━━━━━━━━━━━━━━━""",
         reply_markup=InlineKeyboardMarkup(
             [[InlineKeyboardButton("🌼 ᴘʀɪʏᴀ ᴄʜᴀᴛ 💮", url=config.SUPPORT_GROUP)]]
         ),
